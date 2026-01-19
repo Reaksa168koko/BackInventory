@@ -55,7 +55,7 @@ class OrderItemController extends Controller
             return response()->json([
                 'status'  => true,
                 'message' => 'Order item created successfully',
-                'data'    => $orderItem
+                'OrderItem'    => $orderItem
             ], 201);
 
         } catch (Exception $e) {

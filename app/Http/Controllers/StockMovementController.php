@@ -58,7 +58,7 @@ class StockMovementController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Stock movement created successfully',
-                'data' => $movement->load('product')
+                'Stock' => $movement->load('product')
             ], 201);
 
         } catch (\Throwable $th) {

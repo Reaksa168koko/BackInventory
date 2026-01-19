@@ -79,7 +79,7 @@ public function store(Request $request)
         return response()->json([
             'status'  => true,
             'message' => 'Product created successfully',
-            'data'    => $product->load(['category', 'supplier']),
+            'Products'    => $product->load(['category', 'supplier']),
         ], 201);
 
     } catch (\Exception $e) {

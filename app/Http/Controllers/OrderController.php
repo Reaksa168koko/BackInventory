@@ -62,7 +62,7 @@ class OrderController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Order created successfully',
-            'data' => $order
+            'Order' => $order
         ], 201);
 
     } catch (\Throwable $th) {

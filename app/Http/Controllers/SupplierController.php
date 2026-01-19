@@ -16,7 +16,7 @@ class SupplierController extends Controller
             $suppliers = Supplier::all();
             return response()->json([
                 'status' => true,
-                'data' => $suppliers
+                'Supplier' => $suppliers
             ]);
         } catch (\Exception $e) {
             return response()->json([
