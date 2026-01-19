@@ -58,6 +58,7 @@ public function store(Request $request)
             'price'       => 'required|numeric|min:0',
             'quantity'    => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'status'      => 'required|string',
             'image'       => 'required|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 

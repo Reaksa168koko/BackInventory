@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('supplier_id')->constrained()->cascadeOnDelete();
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
+            $table->string("status");
             $table->text('description')->nullable();
             $table->string("image");
             $table->timestamps();

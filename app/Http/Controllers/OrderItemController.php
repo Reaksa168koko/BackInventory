@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use Exception;
 use Illuminate\Http\Request;
 
 class OrderItemController extends Controller
@@ -42,44 +43,26 @@ class OrderItemController extends Controller
      public function store(Request $request)
     {
         try {
-            $data = $request->validate([
-                'user_id'      => 'required|exists:users,id',
-                'order_date'   => 'required|date',
-                'total_amount' => 'required|numeric|min:0',
-                'status'       => 'required|string',
-                'item'        => 'required|array|min:1',
-                'item.*.product_id' => 'required|exists:products,id',
-                'item.*.quantity'   => 'required|integer|min:1',
-                'item.*.price'      => 'required|numeric|min:0'
+            $validated = $request->validate([
+                'order_id'   => 'required|exists:orders,id',
+                'product_id' => 'required|exists:products,id',
+                'quantity'   => 'required|integer|min:1',
+                'price'      => 'required|numeric|min:0',
             ]);
 
-            // Create order
-            $order = new Order();
-            $order->user_id = $data['user_id'];
-            $order->order_date = $data['order_date'];
-            $order->total_amount = $data['total_amount'];
-            $order->status = $data['status'];
-            $order->save();
-
-            // Create order items
-            foreach ($data['item'] as $item) {
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->product_id = $item['product_id'];
-                $orderItem->quantity = $item['quantity'];
-                $orderItem->price = $item['price'];
-                $orderItem->save();
-            }
+            $orderItem = OrderItem::create($validated);
 
             return response()->json([
-                'status' => true,
-                'message' => 'Order created successfully',
-                'data' => $order->load(['items.product', 'user'])
+                'status'  => true,
+                'message' => 'Order item created successfully',
+                'data'    => $orderItem
             ], 201);
 
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             return response()->json([
-                'message' => $th->getMessage()
+                'status'  => false,
+                'message' => 'Failed to create order item',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }
@@ -117,26 +100,27 @@ class OrderItemController extends Controller
      */
        public function update(Request $request, $id)
     {
-        try {
-            $order = Order::findOrFail($id);
+       try {
+            $orderItem = OrderItem::findOrFail($id);
 
-            $data = $request->validate([
-                'user_id'      => 'sometimes|exists:users,id',
-                'order_date'   => 'sometimes|date',
-                'total_amount' => 'sometimes|numeric|min:0',
-                'status'       => 'sometimes|string'
+            $validated = $request->validate([
+                'quantity' => 'sometimes|required|integer|min:1',
+                'price'    => 'sometimes|required|numeric|min:0',
             ]);
 
-            $order->update($data);
+            $orderItem->update($validated);
 
             return response()->json([
-                'status' => 'update successfully',
-                'data' => $order->load(['items.product', 'user'])
+                'status'  => true,
+                'message' => 'Order item updated successfully',
+                'data'    => $orderItem
             ], 200);
 
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             return response()->json([
-                'message' => $th->getMessage()
+                'status'  => false,
+                'message' => 'Failed to update order item',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }
@@ -147,22 +131,19 @@ class OrderItemController extends Controller
        public function destroy($id)
     {
         try {
-            $order = Order::findOrFail($id);
-
-            // Delete related items first
-            $order->items()->delete();
-
-            // Delete order
-            $order->delete();
+            $orderItem = OrderItem::findOrFail($id);
+            $orderItem->delete();
 
             return response()->json([
-                'status' => true,
-                'message' => 'Order deleted successfully'
+                'status'  => true,
+                'message' => 'Order item deleted successfully',
             ], 200);
 
-        } catch (\Throwable $th) {
+        } catch (Exception $e) {
             return response()->json([
-                'message' => $th->getMessage()
+                'status'  => false,
+                'message' => 'Failed to delete order item',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }

@@ -36,7 +36,7 @@ class AuthController extends Controller
     }
 
 
-     public function login(Request $request)
+    public function login(Request $request)
 {
     try {
         $credentials = $request->validate([
@@ -50,7 +50,14 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = Auth::user();
+            $user = Auth::user();
+            if ($user->role !== 'admin') {
+            return response()->json([
+                "message" => "You are not authorized to access dashboard"
+            ], 403);
+        }
+    
+        /** @var App\Models\User $user */
         $token = $user->createToken("email")->plainTextToken;
         return response()->json([
             "user" => $user,
