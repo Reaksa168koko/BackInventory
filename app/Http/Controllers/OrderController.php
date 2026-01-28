@@ -83,7 +83,7 @@ class OrderController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data' => $order
+                'Show_Order' => $order
             ], 200);
 
         } catch (\Throwable $th) {
@@ -120,7 +120,7 @@ class OrderController extends Controller
 
             return response()->json([
                 'status' => 'update successfully',
-                'data' => $order
+                'Updte_order        ' => $order
             ], 200);
 
         } catch (\Throwable $th) {

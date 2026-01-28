@@ -95,10 +95,24 @@ public function store(Request $request)
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
-    {
-        //
+    public function show($id)
+{
+    try {
+        $product = Product::with(['category', 'supplier'])->findOrFail($id);
+
+        return response()->json([
+            'status' => true,
+            'data' => $product
+        ], 200);
+
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => false,
+            'message' => $th->getMessage()
+        ], 404);
     }
+}
+
 
     /**
      * Show the form for editing the specified resource.

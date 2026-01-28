@@ -15,11 +15,11 @@ class OrderItemController extends Controller
    public function index()
     {
         try {
-            $orders = Order::with(['user', 'item.product'])->get();
+            $orders = Order::with(['user', 'items.product'])->get();
 
             return response()->json([
                 'status' => true,
-                'data' => $orders
+                'Orderitem' => $orders
             ], 200);
 
         } catch (\Throwable $th) {
@@ -77,7 +77,7 @@ class OrderItemController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data' => $order
+                'show_order' => $order
             ], 200);
 
         } catch (\Throwable $th) {
@@ -113,7 +113,7 @@ class OrderItemController extends Controller
             return response()->json([
                 'status'  => true,
                 'message' => 'Order item updated successfully',
-                'data'    => $orderItem
+                'UpdateOrder'    => $orderItem
             ], 200);
 
         } catch (Exception $e) {
