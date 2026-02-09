@@ -48,7 +48,7 @@ class CategoryController extends Controller
     {
         try {
              $request->validate([
-                "name" => ["required","string","min:3","max:15"]
+               "name" => "required|string|min:3|max:15"
             ]);
             $category = new Category();
             $category ->name = request("name");

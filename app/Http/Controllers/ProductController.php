@@ -20,7 +20,7 @@ class ProductController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data' => $products
+                'product' => $products
             ], 200);
 
         } catch (\Exception $e) {
@@ -59,7 +59,7 @@ public function store(Request $request)
             'quantity'    => 'required|integer|min:0',
             'description' => 'nullable|string',
             'status'      => 'required|string',
-            'image'       => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'image'       => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 
         // Handle image upload
@@ -135,11 +135,12 @@ public function update(Request $request, $id)
         $requestd = $request->validate([
             'name'        => 'sometimes|string|max:255',
             'sku'         => 'sometimes|string|unique:products,sku,' . $updates->id,
-            'category_id' => 'required|exists:categories,id',
-            'supplier_id' => 'required|exists:suppliers,id',
+            'category_id' => 'sometimes|exists:categories,id',
+            'supplier_id' => 'sometimes|exists:suppliers,id',
             'price'       => 'sometimes|numeric|min:0',
             'quantity'    => 'sometimes|integer|min:0',
             'description' => 'nullable|string',
+            'status'      => 'sometimes|string',
             'image'       => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
 

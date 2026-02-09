@@ -51,18 +51,12 @@ class AuthController extends Controller
         }
 
             $user = Auth::user();
-            if ($user->role !== 'admin') {
+            /** @var App\Models\User $user */
+            $token = $user->createToken("email")->plainTextToken;
             return response()->json([
-                "message" => "You are not authorized to access dashboard"
-            ], 403);
-        }
-    
-        /** @var App\Models\User $user */
-        $token = $user->createToken("email")->plainTextToken;
-        return response()->json([
-            "user" => $user,
-            "token" => $token
-        ], 200);
+                "user" => $user,
+                "token" => $token
+            ], 200);
 
     } catch (\Throwable $th) {
         return response()->json([

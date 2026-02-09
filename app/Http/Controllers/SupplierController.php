@@ -43,7 +43,9 @@ class SupplierController extends Controller
             $data = $request->validate([
                 'name'    => 'required|string|max:255',
                 'phone'   => 'nullable|string|max:20',
-                'email'   => 'nullable|email|max:255',
+                'item'    => 'required|string|max:255',
+                'company_name' => 'required|string|max:255|unique:suppliers,company_name',
+                'email'   => 'nullable|email|max:255|unique:suppliers,email',
                 'address' => 'nullable|string',
             ]);
 
@@ -52,12 +54,14 @@ class SupplierController extends Controller
             $supplier->phone = $data['phone'] ?? null;
             $supplier->email = $data['email'] ?? null;
             $supplier->address = $data['address'] ?? null;
+            $supplier->company_name = $data['company_name'] ?? null;
+            $supplier->item = $data['item'] ?? null;
             $supplier->save();
 
             return response()->json([
                 'status' => true,
                 'message' => 'Supplier created successfully',
-                'data' => $supplier
+                'supplier' => $supplier
             ], 201);
 
         } catch (\Exception $e) {
@@ -94,10 +98,12 @@ class SupplierController extends Controller
 
         // Validate request data
          $validatedData = $request->validate([
-            'name'    => 'sometimes|string|max:255',
+            'name'    => 'sometimes|string|max:255|unique:sppliers,name',
             'phone'   => 'sometimes|string|max:20',
             'email'   => 'sometimes|email|max:255',
             'address' => 'nullable|string',
+            'item'    => 'required|string|max:255',
+            'company_name' => 'required|string|max:255|unique:suppliers,company_name',
         ]);
 
         // Update supplier
@@ -106,7 +112,7 @@ class SupplierController extends Controller
         return response()->json([
             'status'  => true,
             'message' => 'Updated successfully',
-            'data'    => $supplier
+            'supplier'    => $supplier
         ], 200);
         } catch (\Throwable $th) {
              return response()->json([
